@@ -2372,7 +2372,7 @@ _INSTALL_HINTS: dict[str, str] = {
     "moss-tts-v15":  "git clone OpenMOSS/MOSS-TTS + set OMNIVOICE_MOSS_TTS_V15_DIR  (own venv, transformers==5.0; 8B, ~16 GB weights; CUDA/ROCm/XPU/NPU/CPU, no MPS; Apache-2.0)",
     "dots-tts":      "git clone rednote-hilab/dots.tts + set OMNIVOICE_DOTS_TTS_DIR  (own venv, transformers==4.57; 2B, ~9 GB weights; CUDA/CPU, Linux/macOS only — no Windows; Apache-2.0)",
     "confucius4-tts":"git clone netease-youdao/Confucius4-TTS + set OMNIVOICE_CONFUCIUS4_TTS_DIR  (own Python 3.10 venv; 14-lang cross-lingual zero-shot clone; ~5 GB weights auto-download; CUDA/ROCm/XPU/NPU/CPU, no MPS; Apache-2.0)",
-    "oshara-xtts-v2": "Use the sibling oshara_xtts_v2 project: `uv sync` there, then set OMNIVOICE_OSHARA_XTTS_DIR if it is not ../oshara_xtts_v2 (Nepali XTTS-v2; CUDA/CPU)",
+    "oshara-xtts-v2": "Use the sibling oshara_xtts_v2 project: `uv sync` there, then set OMNIVOICE_OSHARA_XTTS_DIR if it is not ../oshara_xtts_v2  (Nepali XTTS-v2 fine-tune, 24 kHz clone; CUDA/CPU; weights CPML non-commercial only)",
     "audiocpp":     "download the matching audio.cpp v0.7.2 prebuilt + set OMNIVOICE_AUDIOCPP_BIN, then explicitly install Breeze-TTS-2 in the engine's Weights list in Model Catalogue  (native CPU/Vulkan/CUDA/Metal GGUF server, no Python; en+zh clone+design; ~4.73 GiB; weights research/non-commercial only)",
 }
 
