@@ -1549,7 +1549,16 @@
     "exported": "エクスポートされた文字起こし",
     "just_now": "たった今",
     "m_ago": "{{count}}分前",
-    "h_ago": "{{count}}時間前"
+    "h_ago": "{{count}}時間前",
+    "drop_title": "文字起こしする音声ファイルをドロップ",
+    "drop_desc": "WAV、MP3、M4A、FLAC、OGG、Opus、WebM に対応。ファイルは 1 つずつ処理されます。",
+    "drop_browse": "ファイルを選択",
+    "drop_progress": "{{name}} を文字起こし中 ({{done}}/{{total}})…",
+    "drop_done": "{{count}} 件のファイルを文字起こししました",
+    "drop_done_plural": "{{count}} 件のファイルを文字起こししました",
+    "drop_failed": "{{name}} を文字起こしできませんでした: {{error}}",
+    "drop_no_speech": "{{name}} に音声が見つかりませんでした",
+    "drop_not_audio": "音声ファイルではないようです"
   },
   "setup": {
     "welcome": "ようこそ",

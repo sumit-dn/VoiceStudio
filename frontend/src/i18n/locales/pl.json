@@ -1549,7 +1549,16 @@
     "exported": "Eksportowane transkrypcje",
     "just_now": "Właśnie teraz",
     "m_ago": "{{count}}m temu",
-    "h_ago": "{{count}}h temu"
+    "h_ago": "{{count}}h temu",
+    "drop_title": "Upuść plik audio do transkrypcji",
+    "drop_desc": "WAV, MP3, M4A, FLAC, OGG, Opus lub WebM. Pliki są transkrybowane pojedynczo.",
+    "drop_browse": "Przeglądaj pliki",
+    "drop_progress": "Transkrypcja {{name}} ({{done}}/{{total}})…",
+    "drop_done": "Przetranskrybowano {{count}} plik",
+    "drop_done_plural": "Przetranskrybowano {{count}} plików",
+    "drop_failed": "Nie udało się przetranskrybować {{name}}: {{error}}",
+    "drop_no_speech": "Nie znaleziono mowy w {{name}}",
+    "drop_not_audio": "To nie wygląda na plik audio"
   },
   "setup": {
     "welcome": "Witamy",

@@ -1549,7 +1549,16 @@
     "exported": "निर्यातित प्रतिलेखन",
     "just_now": "अभी अभी",
     "m_ago": "{{count}}m पहले",
-    "h_ago": "{{count}}h पहले"
+    "h_ago": "{{count}}h पहले",
+    "drop_title": "ट्रांसक्राइब करने के लिए ऑडियो फ़ाइल छोड़ें",
+    "drop_desc": "WAV, MP3, M4A, FLAC, OGG, Opus या WebM। फ़ाइलें एक-एक करके ट्रांसक्राइब की जाती हैं।",
+    "drop_browse": "फ़ाइलें ब्राउज़ करें",
+    "drop_progress": "{{name}} ट्रांसक्राइब हो रही है ({{done}}/{{total}})…",
+    "drop_done": "{{count}} फ़ाइल ट्रांसक्राइब हुई",
+    "drop_done_plural": "{{count}} फ़ाइलें ट्रांसक्राइब हुईं",
+    "drop_failed": "{{name}} ट्रांसक्राइब नहीं हो सकी: {{error}}",
+    "drop_no_speech": "{{name}} में कोई भाषण नहीं मिला",
+    "drop_not_audio": "यह ऑडियो फ़ाइल नहीं लगती"
   },
   "setup": {
     "welcome": "स्वागत है",

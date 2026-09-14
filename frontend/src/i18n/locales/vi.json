@@ -1549,7 +1549,16 @@
     "exported": "Bản chép lời đã xuất",
     "just_now": "Vừa rồi",
     "m_ago": "{{count}}phút trước",
-    "h_ago": "{{count}}giờ trước"
+    "h_ago": "{{count}}giờ trước",
+    "drop_title": "Thả tệp âm thanh để chuyển thành văn bản",
+    "drop_desc": "WAV, MP3, M4A, FLAC, OGG, Opus hoặc WebM. Các tệp được xử lý lần lượt.",
+    "drop_browse": "Duyệt tệp",
+    "drop_progress": "Đang chuyển {{name}} ({{done}}/{{total}})…",
+    "drop_done": "Đã chuyển {{count}} tệp",
+    "drop_done_plural": "Đã chuyển {{count}} tệp",
+    "drop_failed": "Không thể chuyển {{name}}: {{error}}",
+    "drop_no_speech": "Không tìm thấy giọng nói trong {{name}}",
+    "drop_not_audio": "Đó không giống tệp âm thanh"
   },
   "setup": {
     "welcome": "Chào mừng",

@@ -1549,7 +1549,16 @@
     "exported": "Geëxporteerde transcripties",
     "just_now": "Zojuist",
     "m_ago": "{{count}}m geleden",
-    "h_ago": "{{count}}u geleden"
+    "h_ago": "{{count}}u geleden",
+    "drop_title": "Sleep een audiobestand om te transcriberen",
+    "drop_desc": "WAV, MP3, M4A, FLAC, OGG, Opus of WebM. Bestanden worden één voor één getranscribeerd.",
+    "drop_browse": "Bestanden bladeren",
+    "drop_progress": "{{name}} transcriberen ({{done}}/{{total}})…",
+    "drop_done": "{{count}} bestand getranscribeerd",
+    "drop_done_plural": "{{count}} bestanden getranscribeerd",
+    "drop_failed": "Kan {{name}} niet transcriberen: {{error}}",
+    "drop_no_speech": "Geen spraak gevonden in {{name}}",
+    "drop_not_audio": "Dat lijkt geen audiobestand"
   },
   "setup": {
     "welcome": "Welkom",

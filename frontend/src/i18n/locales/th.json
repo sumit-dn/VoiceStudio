@@ -1549,7 +1549,16 @@
     "exported": "การถอดเสียงที่ส่งออก",
     "just_now": "แค่ตอนนี้",
     "m_ago": "{{count}}นาทีที่แล้ว",
-    "h_ago": "{{count}}ชม. ที่แล้ว"
+    "h_ago": "{{count}}ชม. ที่แล้ว",
+    "drop_title": "วางไฟล์เสียงเพื่อถอดความ",
+    "drop_desc": "WAV, MP3, M4A, FLAC, OGG, Opus หรือ WebM ไฟล์จะถูกถอดความทีละไฟล์",
+    "drop_browse": "เรียกดูไฟล์",
+    "drop_progress": "กำลังถอดความ {{name}} ({{done}}/{{total}})…",
+    "drop_done": "ถอดความแล้ว {{count}} ไฟล์",
+    "drop_done_plural": "ถอดความแล้ว {{count}} ไฟล์",
+    "drop_failed": "ถอดความ {{name}} ไม่สำเร็จ: {{error}}",
+    "drop_no_speech": "ไม่พบคำพูดใน {{name}}",
+    "drop_not_audio": "ดูเหมือนจะไม่ใช่ไฟล์เสียง"
   },
   "setup": {
     "welcome": "ยินดีต้อนรับ",

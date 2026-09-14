@@ -1804,7 +1804,16 @@
     "exported": "已导出转录记录",
     "just_now": "刚刚",
     "m_ago": "{{count}} 分钟前",
-    "h_ago": "{{count}} 小时前"
+    "h_ago": "{{count}} 小时前",
+    "drop_title": "拖入音频文件进行转写",
+    "drop_desc": "支持 WAV、MP3、M4A、FLAC、OGG、Opus 或 WebM。文件将逐个转写。",
+    "drop_browse": "浏览文件",
+    "drop_progress": "正在转写 {{name}}（{{done}}/{{total}}）…",
+    "drop_done": "已转写 {{count}} 个文件",
+    "drop_done_plural": "已转写 {{count}} 个文件",
+    "drop_failed": "无法转写 {{name}}：{{error}}",
+    "drop_no_speech": "在 {{name}} 中未发现语音",
+    "drop_not_audio": "这似乎不是音频文件"
   },
   "setup": {
     "welcome": "欢迎",

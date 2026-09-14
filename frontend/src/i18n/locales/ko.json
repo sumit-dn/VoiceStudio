@@ -1852,7 +1852,16 @@
     "exported": "내보낸 녹취록",
     "just_now": "지금 막",
     "m_ago": "{{count}}분 전",
-    "h_ago": "{{count}}시간 전"
+    "h_ago": "{{count}}시간 전",
+    "drop_title": "전사할 오디오 파일을 놓으세요",
+    "drop_desc": "WAV, MP3, M4A, FLAC, OGG, Opus 또는 WebM. 파일은 하나씩 전사됩니다.",
+    "drop_browse": "파일 찾아보기",
+    "drop_progress": "{{name}} 전사 중 ({{done}}/{{total}})…",
+    "drop_done": "{{count}}개 파일을 전사했습니다",
+    "drop_done_plural": "{{count}}개 파일을 전사했습니다",
+    "drop_failed": "{{name}}을(를) 전사할 수 없습니다: {{error}}",
+    "drop_no_speech": "{{name}}에서 음성을 찾지 못했습니다",
+    "drop_not_audio": "오디오 파일이 아닌 것 같습니다"
   },
   "setup": {
     "welcome": "환영합니다",

@@ -22,6 +22,7 @@ only process isolation.
 from __future__ import annotations
 
 import logging
+import os
 import sys
 import threading
 from pathlib import Path
@@ -59,6 +60,77 @@ class SubprocessASRBackend(SubprocessBackend):
 
     def generate(self, text: str, **kw):  # pragma: no cover - unused
         raise NotImplementedError("ASR sidecar does not synthesize speech")
+
+    def warmup(self) -> None:
+        """Load the model NOW, off the user's first dictation (#888 class).
+
+        The background capture-ASR preload calls this — but only when the
+        backend actually has it. Neither subprocess ASR engine did, so the
+        preload selected one, found no ``warmup``, and silently did nothing;
+        the whole cold load then landed inside the user's first dictation
+        session, which sat there for tens of seconds looking hung (measured
+        here: 29 s first call, 0.4 s after).
+
+        Spawning alone is not enough: these sidecars import torch and restore
+        weights lazily, on their first transcribe. So warm with a real (tiny,
+        silent) transcription — that is the only thing that proves the model
+        is resident. Best-effort by contract: the preload runs in the
+        background and a failure here must never break dictation, which
+        simply falls back to loading on first use.
+        """
+        import tempfile
+        import time
+        import wave
+
+        t0 = time.perf_counter()
+        tmp = None
+        try:
+            with self._lock:
+                self._spawn()
+            # 0.1 s of silence at 16 kHz mono — every ASR engine accepts it,
+            # and it costs nothing next to the model load it triggers.
+            handle = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
+            handle.close()
+            tmp = handle.name
+            with wave.open(tmp, "wb") as wf:
+                wf.setnchannels(1)
+                wf.setsampwidth(2)
+                wf.setframerate(16000)
+                wf.writeframes(b"\x00\x00" * 1600)
+            self.transcribe(tmp, word_timestamps=False)
+            logger.info(
+                "%s ASR sidecar warmed up in %.1fs",
+                self.id, time.perf_counter() - t0,
+            )
+        except Exception as e:  # noqa: BLE001 — preload must never break dictation
+            logger.warning(
+                "%s ASR warmup failed after %.1fs (will load on first use): %s",
+                self.id, time.perf_counter() - t0, e,
+            )
+        finally:
+            if tmp:
+                try:
+                    os.unlink(tmp)
+                except OSError:
+                    pass
+
+    def ensure_loaded(self) -> None:
+        """ASRBackend's eager-load hook (the ASR contract's name for it).
+
+        These backends inherit the TTS ``SubprocessBackend``, which spells the
+        same operation ``ensure_ready`` — so the ASR loader
+        (``load_active_asr_backend``, used by the batch and "accurate"
+        transcribe paths) hit AttributeError on EVERY subprocess ASR engine
+        and took the request down with it. The ASR surface is duck-typed
+        against ``ASRBackend``, so the contract has to be satisfied by name.
+
+        Spawning the sidecar here is what the hook is for: it moves the cold
+        model load out of the caller's transcribe budget and into the
+        model-load budget, and surfaces a broken engine as one clean error up
+        front rather than a cryptic failure mid-transcription.
+        """
+        with self._lock:
+            self._spawn()
 
     # ── ASR surface ────────────────────────────────────────────────────────
     @staticmethod
@@ -115,6 +187,25 @@ class SubprocessASRBackend(SubprocessBackend):
                     "word_timestamps": bool(word_timestamps),
                 })
                 reply = self._recv_with_timeout(ASR_RECV_TIMEOUT_S)
+                # A cold sidecar may emit non-terminal {"op": "progress"}
+                # frames (a model load, audio preprocessing) before the
+                # terminal segments frame. Each recv re-arms the watchdog, so
+                # a long-but-active load survives while a silent wedge is
+                # still killed at the deadline. Each frame is also reported to
+                # the GPU pool's execution clock, exactly as the TTS generate
+                # path does (#1367) — without it the outer transcribe budget
+                # can expire during a healthy multi-GB cold load and blame the
+                # hardware for it.
+                while reply is not None and reply.get("op") == "progress":
+                    try:
+                        from services.model_manager import (
+                            report_model_load_activity, running_on_gpu_pool,
+                        )
+                        if running_on_gpu_pool():
+                            report_model_load_activity()
+                    except Exception:
+                        pass  # heartbeat is best-effort; never fail a job over it
+                    reply = self._recv_with_timeout(ASR_RECV_TIMEOUT_S)
             if not reply:
                 # Pipe closed mid-transcription → the child crashed.
                 raise RuntimeError(

@@ -1549,7 +1549,16 @@
     "exported": "Dışa aktarılan transkripsiyonlar",
     "just_now": "Az önce",
     "m_ago": "{{count}}m önce",
-    "h_ago": "{{count}}sa önce"
+    "h_ago": "{{count}}sa önce",
+    "drop_title": "Yazıya dökmek için bir ses dosyası bırakın",
+    "drop_desc": "WAV, MP3, M4A, FLAC, OGG, Opus veya WebM. Dosyalar teker teker yazıya dökülür.",
+    "drop_browse": "Dosyalara göz at",
+    "drop_progress": "{{name}} yazıya dökülüyor ({{done}}/{{total}})…",
+    "drop_done": "{{count}} dosya yazıya döküldü",
+    "drop_done_plural": "{{count}} dosya yazıya döküldü",
+    "drop_failed": "{{name}} yazıya dökülemedi: {{error}}",
+    "drop_no_speech": "{{name}} içinde konuşma bulunamadı",
+    "drop_not_audio": "Bu bir ses dosyasına benzemiyor"
   },
   "setup": {
     "welcome": "Hoş geldiniz",

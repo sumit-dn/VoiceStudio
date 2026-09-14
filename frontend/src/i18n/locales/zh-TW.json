@@ -1549,7 +1549,16 @@
     "exported": "匯出的轉錄內容",
     "just_now": "剛才",
     "m_ago": "{{count}}分鐘前",
-    "h_ago": "{{count}} 小時前"
+    "h_ago": "{{count}} 小時前",
+    "drop_title": "拖入音訊檔案進行轉寫",
+    "drop_desc": "支援 WAV、MP3、M4A、FLAC、OGG、Opus 或 WebM。檔案將逐一轉寫。",
+    "drop_browse": "瀏覽檔案",
+    "drop_progress": "正在轉寫 {{name}}（{{done}}/{{total}}）…",
+    "drop_done": "已轉寫 {{count}} 個檔案",
+    "drop_done_plural": "已轉寫 {{count}} 個檔案",
+    "drop_failed": "無法轉寫 {{name}}：{{error}}",
+    "drop_no_speech": "在 {{name}} 中未發現語音",
+    "drop_not_audio": "這似乎不是音訊檔案"
   },
   "setup": {
     "welcome": "歡迎",

@@ -1806,7 +1806,16 @@
     "exported": "Exported transcriptions",
     "just_now": "Just now",
     "m_ago": "{{count}}m ago",
-    "h_ago": "{{count}}h ago"
+    "h_ago": "{{count}}h ago",
+    "drop_title": "Drop an audio file to transcribe",
+    "drop_desc": "WAV, MP3, M4A, FLAC, OGG, Opus or WebM. Files are transcribed one at a time.",
+    "drop_browse": "Browse files",
+    "drop_progress": "Transcribing {{name}} ({{done}}/{{total}})…",
+    "drop_done": "Transcribed {{count}} file",
+    "drop_done_plural": "Transcribed {{count}} files",
+    "drop_failed": "Couldn't transcribe {{name}}: {{error}}",
+    "drop_no_speech": "No speech found in {{name}}",
+    "drop_not_audio": "That doesn't look like an audio file"
   },
   "transcriptionPicker": {
     "title": "Import from a transcription",

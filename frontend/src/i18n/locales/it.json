@@ -1549,7 +1549,16 @@
     "exported": "Trascrizioni esportate",
     "just_now": "Proprio adesso",
     "m_ago": "{{count}}m fa",
-    "h_ago": "{{count}}h fa"
+    "h_ago": "{{count}}h fa",
+    "drop_title": "Trascina un file audio da trascrivere",
+    "drop_desc": "WAV, MP3, M4A, FLAC, OGG, Opus o WebM. I file vengono trascritti uno alla volta.",
+    "drop_browse": "Sfoglia file",
+    "drop_progress": "Trascrizione di {{name}} ({{done}}/{{total}})…",
+    "drop_done": "{{count}} file trascritto",
+    "drop_done_plural": "{{count}} file trascritti",
+    "drop_failed": "Impossibile trascrivere {{name}}: {{error}}",
+    "drop_no_speech": "Nessun parlato trovato in {{name}}",
+    "drop_not_audio": "Non sembra un file audio"
   },
   "setup": {
     "welcome": "Benvenuto",

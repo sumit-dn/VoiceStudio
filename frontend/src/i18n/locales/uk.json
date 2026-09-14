@@ -1549,7 +1549,16 @@
     "exported": "Експортовані транскрипції",
     "just_now": "Просто зараз",
     "m_ago": "{{count}}хв тому",
-    "h_ago": "{{count}} год тому"
+    "h_ago": "{{count}} год тому",
+    "drop_title": "Перетягніть аудіофайл для розшифровки",
+    "drop_desc": "WAV, MP3, M4A, FLAC, OGG, Opus або WebM. Файли розшифровуються по одному.",
+    "drop_browse": "Вибрати файли",
+    "drop_progress": "Розшифровка {{name}} ({{done}}/{{total}})…",
+    "drop_done": "Розшифровано {{count}} файл",
+    "drop_done_plural": "Розшифровано файлів: {{count}}",
+    "drop_failed": "Не вдалося розшифрувати {{name}}: {{error}}",
+    "drop_no_speech": "Мовлення не знайдено у {{name}}",
+    "drop_not_audio": "Це не схоже на аудіофайл"
   },
   "setup": {
     "welcome": "Ласкаво просимо",

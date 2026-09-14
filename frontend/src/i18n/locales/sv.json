@@ -1549,7 +1549,16 @@
     "exported": "Exporterade transkriptioner",
     "just_now": "Just nu",
     "m_ago": "{{count}}m sedan",
-    "h_ago": "{{count}}h sedan"
+    "h_ago": "{{count}}h sedan",
+    "drop_title": "Släpp en ljudfil för att transkribera",
+    "drop_desc": "WAV, MP3, M4A, FLAC, OGG, Opus eller WebM. Filer transkriberas en i taget.",
+    "drop_browse": "Bläddra bland filer",
+    "drop_progress": "Transkriberar {{name}} ({{done}}/{{total}})…",
+    "drop_done": "{{count}} fil transkriberad",
+    "drop_done_plural": "{{count}} filer transkriberade",
+    "drop_failed": "Kunde inte transkribera {{name}}: {{error}}",
+    "drop_no_speech": "Inget tal hittades i {{name}}",
+    "drop_not_audio": "Det ser inte ut som en ljudfil"
   },
   "setup": {
     "welcome": "Välkommen",

@@ -2421,7 +2421,12 @@ class _LazyASRRegistry(dict):
     registry's lazy pattern so listing/selecting the crash-isolated ASR
     backend doesn't import the subprocess stack unless it's used."""
 
-    _LAZY = {"faster-whisper-isolated": _isolated_faster_whisper}
+    _LAZY = {
+        "faster-whisper-isolated": _isolated_faster_whisper,
+        "indicconformer-nepali": lambda: __import__(
+            "engines.indicconformer_nepali", fromlist=["IndicConformerNepaliBackend"]
+        ).IndicConformerNepaliBackend,
+    }
 
     def __contains__(self, key):
         return dict.__contains__(self, key) or key in self._LAZY
@@ -2473,6 +2478,10 @@ _REGISTRY: dict[str, type[ASRBackend]] = _LazyASRRegistry({
 # Short install hints surfaced as tooltips on the Model Catalogue UI
 # (parity with tts_backend._INSTALL_HINTS).
 _INSTALL_HINTS: dict[str, str] = {
+    "indicconformer-nepali": (
+        "Use a dedicated environment; see docs/engines/indicconformer-nepali.md. "
+        "Do not install AI4Bharat NeMo into VoiceStudio's shared venv."
+    ),
     "whisperx":        "pip install whisperx  (CTranslate2 + wav2vec2 alignment; CUDA or CPU)",
     "faster-whisper":  "pip install faster-whisper  (CTranslate2; cross-platform, CUDA or CPU)",
     "mlx-whisper":     "pip install mlx-whisper  (Apple Silicon only)",
@@ -3265,6 +3274,31 @@ def get_capture_asr_backend(*, skip_sherpa: bool = False) -> ASRBackend:
     # Atomic resolve+build so the preload thread and a WS session (which may
     # call get_sherpa_dictation_backend concurrently) can't both build a model.
     with _capture_backend_lock:
+        if not skip_sherpa:
+            try:
+                from core import prefs
+                selected_capture_id = prefs.get("dictation.model_id")
+            except Exception:
+                selected_capture_id = None
+            if selected_capture_id == "indicconformer-nepali":
+                cls = _REGISTRY[selected_capture_id]
+                ok, reason = cls.is_available()
+                if not ok:
+                    raise RuntimeError(reason)
+                # Reuse the process-wide isolated instance rather than building
+                # a fresh one: each construction registers an atexit shutdown
+                # hook and owns its own sidecar child, so a per-selection
+                # instance leaks handler entries and respawns the sidecar
+                # (reloading ~500 MB of weights). Same rule the offline
+                # selector follows in get_active_asr_backend.
+                inst = _ISOLATED_INSTANCES.get(selected_capture_id)
+                if inst is None:
+                    inst = cls()
+                    _ISOLATED_INSTANCES[selected_capture_id] = inst
+                _capture_backend = inst
+                _capture_backend_key = selected_capture_id
+                return _capture_backend
+
         # 0. Honor an explicit sherpa dictation model selection.
         sherpa_id = None if skip_sherpa else dictation_model_id()
         if sherpa_id:
@@ -3547,6 +3581,15 @@ def asr_model_missing_error(*, purpose: str = "transcribe",
         prefer_sherpa_recommendation = not skip_sherpa
         excluded_sherpa_model_id = None
         if purpose == "dictation":
+            try:
+                from core import prefs as _prefs
+                selected_capture_id = _prefs.get("dictation.model_id")
+            except Exception:
+                selected_capture_id = None
+            if selected_capture_id == "indicconformer-nepali":
+                # This isolated offline backend owns the buffered capture path;
+                # it is not a Sherpa model and must bypass Sherpa preflight.
+                return None
             sid = None if skip_sherpa else (sherpa_model_id or dictation_model_id())
             if sid:
                 ok, _ = SherpaDictationBackend.is_available()

@@ -9,11 +9,22 @@
  */
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Mic, Copy, Trash2, Search, Clock, Languages, FileText, Download } from 'lucide-react';
+import {
+  Mic,
+  Copy,
+  Trash2,
+  Search,
+  Clock,
+  Languages,
+  FileText,
+  FileAudio,
+  Download,
+} from 'lucide-react';
 import { Button } from '../ui';
 import { detectPlatform } from '../utils/micError';
 import { useDictationReadiness } from '../hooks/useDictationReadiness';
 import AsrModelChooser from '../components/AsrModelChooser';
+import TranscriptionDropzone from '../components/TranscriptionDropzone';
 import { toast } from 'react-hot-toast';
 import { copyText as copyToClipboard } from '../utils/copyText';
 import { toMillis } from '../utils/relativeTime';
@@ -54,6 +65,9 @@ export function addTranscription(entry) {
     language: entry.language || 'unknown',
     duration_s: entry.duration_s || 0,
     segments: entry.segments || [],
+    // Set for file drops; absent for microphone dictation, which is the
+    // implicit source and needs no label.
+    source: entry.source || null,
     timestamp: new Date().toISOString(),
   };
   list.unshift(newEntry);
@@ -285,6 +299,14 @@ export default function TranscriptionsPage() {
         </div>
       )}
 
+      <TranscriptionDropzone
+        disabled={readiness.phase !== 'ready'}
+        onTranscribed={(entry) => {
+          addTranscription(entry);
+          setTranscriptions(loadTranscriptions());
+        }}
+      />
+
       <div className="flex flex-wrap items-center gap-2 text-xs text-fg-muted">
         <kbd className="rounded border border-border bg-bg-elev-1 px-2 py-1 font-mono">
           {shortcut.display}
@@ -359,6 +381,18 @@ export default function TranscriptionsPage() {
                   {t.duration_s > 0 && (
                     <span className="txn-item__dur flex items-center gap-[3px]">
                       {t.duration_s.toFixed(1)}s
+                    </span>
+                  )}
+                  {/* Dropped files carry their filename; dictation has none.
+                      The map's parameter shadows the i18n `t` in this scope,
+                      so the label is the filename itself, not a translated
+                      string. */}
+                  {t.source && (
+                    <span
+                      className="txn-item__source flex items-center gap-[3px] truncate max-w-[140px]"
+                      title={t.source}
+                    >
+                      <FileAudio size={10} /> {t.source}
                     </span>
                   )}
                 </div>

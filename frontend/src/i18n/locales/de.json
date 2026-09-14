@@ -1549,7 +1549,16 @@
     "exported": "Exportierte Transkriptionen",
     "just_now": "Gerade eben",
     "m_ago": "Vor {{count}}m",
-    "h_ago": "Vor {{count}}h"
+    "h_ago": "Vor {{count}}h",
+    "drop_title": "Audiodatei zum Transkribieren ablegen",
+    "drop_desc": "WAV, MP3, M4A, FLAC, OGG, Opus oder WebM. Dateien werden nacheinander transkribiert.",
+    "drop_browse": "Dateien durchsuchen",
+    "drop_progress": "{{name}} wird transkribiert ({{done}}/{{total}})…",
+    "drop_done": "{{count}} Datei transkribiert",
+    "drop_done_plural": "{{count}} Dateien transkribiert",
+    "drop_failed": "{{name}} konnte nicht transkribiert werden: {{error}}",
+    "drop_no_speech": "Keine Sprache in {{name}} gefunden",
+    "drop_not_audio": "Das scheint keine Audiodatei zu sein"
   },
   "setup": {
     "welcome": "Willkommen",

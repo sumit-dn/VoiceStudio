@@ -43,7 +43,7 @@ _VALID_MODES = ("toggle", "hold")
 
 def _read_prefs() -> dict:
     mid = prefs.get(PREF_MODEL_ID, sd.DEFAULT_MODEL_ID)
-    if not sd.is_sherpa_model(mid):
+    if not sd.is_sherpa_model(mid) and mid != "indicconformer-nepali":
         mid = sd.DEFAULT_MODEL_ID
     mode = prefs.get(PREF_MODE, _DEFAULT_MODE)
     if mode not in _VALID_MODES:
@@ -78,6 +78,25 @@ def list_dictation_models():
             "kind": spec.kind,
             "installed": sd.is_installed(spec),
         })
+    try:
+        from services.asr_backend import _REGISTRY
+        indic_cls = _REGISTRY["indicconformer-nepali"]
+        indic_available, indic_reason = indic_cls.is_available()
+    except Exception as exc:
+        indic_available, indic_reason = False, str(exc)
+    out.append({
+        "id": "indicconformer-nepali",
+        "repo_id": "ai4bharat/indicconformer_stt_ne_hybrid_ctc_rnnt_large",
+        "label": "IndicConformer (AI4Bharat Nepali)",
+        "tag": "offline",
+        "recommended": False,
+        "size_gb": 1.0,
+        "languages": "Nepali",
+        "kind": "isolated-asr",
+        "installed": indic_available,
+        "available": indic_available,
+        "reason": indic_reason if not indic_available else None,
+    })
     return {
         "models": out,
         "engine_available": available,
@@ -91,10 +110,13 @@ def dictation_readiness(model_id: str | None = None) -> dict:
     """Check capture's model selection without loading or downloading weights."""
     from services.asr_backend import asr_model_missing_error
 
-    missing = asr_model_missing_error(
-        purpose="dictation",
-        sherpa_model_id=model_id or _read_prefs()["model_id"],
-    )
+    selected = model_id or _read_prefs()["model_id"]
+    if selected == "indicconformer-nepali":
+        from services.asr_backend import _REGISTRY
+        ok, reason = _REGISTRY[selected].is_available()
+        missing = None if ok else {"engine": selected, "reason": reason}
+    else:
+        missing = asr_model_missing_error(purpose="dictation", sherpa_model_id=selected)
     return {"ready": missing is None, "missing": missing}
 
 
@@ -121,13 +143,13 @@ def set_dictation_prefs(req: DictationPrefsUpdate):
                 detail=f"mode must be one of {_VALID_MODES}",
             )
     if req.model_id is not None:
-        if not sd.is_sherpa_model(req.model_id):
+        if not sd.is_sherpa_model(req.model_id) and req.model_id != "indicconformer-nepali":
             raise HTTPException(
                 status_code=400,
                 detail=f"unknown dictation model_id {req.model_id!r}",
             )
         # Normalise to the canonical dictation id (accept repo_id too).
-        canonical = sd.get_spec(req.model_id).id
+        canonical = req.model_id if req.model_id == "indicconformer-nepali" else sd.get_spec(req.model_id).id
 
     # Reset before persisting: if the capture service is unavailable, the
     # request fails without claiming that settings which are not active were
@@ -153,7 +175,8 @@ def set_dictation_prefs(req: DictationPrefsUpdate):
         # charge, and a sherpa upgrade may well have fixed the decoder that
         # produced no text last time. Without this, a demoted model could never
         # be re-selected from the UI.
-        sd.clear_demotion(canonical)
+        if sd.is_sherpa_model(canonical):
+            sd.clear_demotion(canonical)
     if req.enabled is not None:
         prefs.set_(PREF_ENABLED, bool(req.enabled))
     return _read_prefs()

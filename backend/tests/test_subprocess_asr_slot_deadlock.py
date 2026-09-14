@@ -150,3 +150,70 @@ def test_transcribe_off_pool_holds_a_slot(tmp_path, monkeypatch):
     finally:
         b.shutdown()
         pool.shutdown(wait=False)
+
+
+def test_subprocess_asr_backends_satisfy_the_asr_eager_load_contract():
+    """Regression: every subprocess ASR engine needs `ensure_loaded`.
+
+    These backends inherit the TTS ``SubprocessBackend``, which spells the
+    eager-load hook ``ensure_ready``. ``ASRBackend`` — the contract the ASR
+    registry duck-types against — spells it ``ensure_loaded``, and
+    ``load_active_asr_backend`` calls it unconditionally. Without the alias,
+    the batch route and /transcribe's `mode=accurate` path raised
+    AttributeError on EVERY subprocess ASR engine, 500ing the request.
+    """
+    from services.subprocess_asr import (
+        IsolatedFasterWhisperBackend,
+        SubprocessASRBackend,
+    )
+
+    for cls in (SubprocessASRBackend, IsolatedFasterWhisperBackend):
+        assert callable(getattr(cls, "ensure_loaded", None)), (
+            f"{cls.__name__} must expose ensure_loaded() — the ASR loader "
+            f"calls it on every candidate before transcribing"
+        )
+
+
+def test_subprocess_asr_backends_expose_warmup_for_the_capture_preload():
+    """Regression: the background capture-ASR preload must be able to warm these.
+
+    `main._preload_capture_asr` warms the selected dictation engine only
+    `if hasattr(backend, 'warmup')`. Neither subprocess ASR engine had it, so
+    the preload selected one, found no hook, and silently did nothing — moving
+    the entire cold model load (measured: ~29 s) into the user's first
+    dictation session, which sat there looking hung while a preload had
+    already been given the chance to do exactly that work in the background.
+    """
+    from services.subprocess_asr import (
+        IsolatedFasterWhisperBackend,
+        SubprocessASRBackend,
+    )
+
+    for cls in (SubprocessASRBackend, IsolatedFasterWhisperBackend):
+        assert callable(getattr(cls, "warmup", None)), (
+            f"{cls.__name__} must expose warmup() — the capture preload skips "
+            f"any backend without it, stalling the first dictation instead"
+        )
+
+
+def test_warmup_never_raises_even_when_the_sidecar_is_broken(monkeypatch):
+    """The preload runs in the background; a warmup failure must not escape.
+
+    Dictation still works without a warm model (it just loads on first use),
+    so a broken engine has to degrade to that rather than take the preload
+    task — or the session — down with it.
+    """
+    from services.subprocess_asr import SubprocessASRBackend
+
+    class _Broken(SubprocessASRBackend):
+        id = "broken-warmup"
+        display_name = "Broken"
+
+        @classmethod
+        def is_available(cls):
+            return True, "ready"
+
+        def _spawn(self):
+            raise RuntimeError("sidecar refused to start")
+
+    _Broken().warmup()  # must not raise

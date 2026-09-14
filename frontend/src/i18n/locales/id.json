@@ -1549,7 +1549,16 @@
     "exported": "Transkripsi yang diekspor",
     "just_now": "Baru saja",
     "m_ago": "{{count}}m yang lalu",
-    "h_ago": "{{count}}jam yang lalu"
+    "h_ago": "{{count}}jam yang lalu",
+    "drop_title": "Jatuhkan berkas audio untuk ditranskripsikan",
+    "drop_desc": "WAV, MP3, M4A, FLAC, OGG, Opus atau WebM. Berkas ditranskripsikan satu per satu.",
+    "drop_browse": "Telusuri berkas",
+    "drop_progress": "Mentranskripsikan {{name}} ({{done}}/{{total}})…",
+    "drop_done": "{{count}} berkas ditranskripsikan",
+    "drop_done_plural": "{{count}} berkas ditranskripsikan",
+    "drop_failed": "Tidak dapat mentranskripsikan {{name}}: {{error}}",
+    "drop_no_speech": "Tidak ada ucapan ditemukan di {{name}}",
+    "drop_not_audio": "Itu sepertinya bukan berkas audio"
   },
   "setup": {
     "welcome": "Selamat datang",
